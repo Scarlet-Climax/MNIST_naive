@@ -1,5 +1,7 @@
 # 跑例程一时爽，一直跑例程一直爽
 
+[TOC]
+
 这篇文章教你怎么用keras来XJB搭一个（对服饰图像分类的）MNIST模型
 
 ## 导入tf库
@@ -105,7 +107,7 @@ model.compile(optimizer=tf.train.AdamOptimizer(),
 8说了，开冲
 
 ```py
-model.fit(train_images, train_labels, epochs=20)
+model.fit(train_images, train_labels, epochs=5)
 ```
 
 ## 评估准确率
@@ -116,3 +118,66 @@ model.fit(train_images, train_labels, epochs=20)
 test_loss, test_acc = model.evaluate(test_images, test_labels)
 print('Test accuracy:', test_acc)
 ```
+## 学（mo）习（gai）时间
+
+### 改epochs
+
+先试了一下训练20个epochs：
+```py
+model.fit(train_images, train_labels, epochs=20)
+```
+
+效果：
+```
+...
+Epoch 20/20
+60000/60000 [==============================] - 2s 30us/step - loss: 0.1791 - acc: 0.9329
+10000/10000 [==============================] - 0s 18us/step
+Test accuracy: 0.888
+```
+
+### 改模型层数
+
+多加一层128个感知器的全连接层
+```py
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(28, 28)),
+    keras.layers.Dense(128, activation=tf.nn.relu),
+	keras.layers.Dense(128, activation=tf.nn.relu),
+    keras.layers.Dense(10, activation=tf.nn.softmax)
+])
+```
+效果：
+```
+Epoch 5/5
+60000/60000 [==============================] - 2s 36us/step - loss: 0.2869 - acc: 0.8938
+10000/10000 [==============================] - 0s 21us/step
+Test accuracy: 0.8736
+```
+
+### 改感知器个数
+
+把中间层改成512个感知器
+```py
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(28, 28)),
+    keras.layers.Dense(512, activation=tf.nn.relu),
+    keras.layers.Dense(10, activation=tf.nn.softmax)
+])
+```
+效果：
+```
+Epoch 5/5
+60000/60000 [==============================] - 5s 80us/step - loss: 0.2825 - acc: 0.8951
+10000/10000 [==============================] - 0s 34us/step
+Test accuracy: 0.8762
+```
+
+### 总结
+- 改epochs：慢，nb
+- 改模型层数：快，菜
+- 改模型大小：稍慢，还行
+
+就一句话（雾
+
+> 改编不是乱编，戏说不是胡说
